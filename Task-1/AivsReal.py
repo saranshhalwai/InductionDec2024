@@ -22,11 +22,11 @@ def createdataframe(dir):
 def extract_features(images):
     features = []
     for image in tqdm(images):
-        img = load_img(image, target_size=(224, 224))
+        img = load_img(image, target_size=(236, 236))
         img = np.array(img)
         features.append(img)
     features = np.array(features)
-    features = features.reshape(features.shape[0], 224, 224, 3)  # Reshape all images in one go
+    features = features.reshape(features.shape[0], 236, 236, 3)  # Reshape all images in one go
     return features
 
 TRAIN_DIR = "/kaggle/input/dataset/Train"
@@ -63,5 +63,5 @@ model.add(Dropout(0.3))
 model.add(Dense(2048, activation='relu'))
 model.add(Dense(2, activation='softmax'))
 
-model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit(x=x_train, y=y_train, batch_size=25, epochs=20)
