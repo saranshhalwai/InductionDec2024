@@ -27,3 +27,6 @@ Detailed instructions and guidelines can be found in the task folder.
 > **Note:** This is a bonus task for both the first years and second years.
 
 # Task 3
+In this task, you are supposed to fine-tune a LLM to a custom persona-based chat dataset provided to you. The main goal of the task is to fine-tune an LLM of your choice in limited computation power to align with the persona of a human and give a better experience to user to chat with the LLM.
+
+Dataset and details can be found in the respective task folder.
