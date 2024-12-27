@@ -8,7 +8,7 @@ The goal of this competition is to develop a **machine learning algorithm** capa
 
 ## Key Details
 
-- **Compulsory Sub_Task 1**: Participants are free to initiate the task using any algorithm of their choice. It carries 40% weightage during evaluation.
+- **Compulsory Sub_Task 1**: Participants are free to initiate the task using any algorithm of their choice. It carries 40% weightage during evaluation. The link to the competition is [here](https://www.kaggle.com/competitions/induction-task)
 - **Compulsory Sub_Task 2**: Implement a **GAN (Generative Adversarial Network)** from scratch, for reference a baseline script has been provided. The GAN should be able to generate good images. Browny points if you can somehow use it for image classification task also. It carries 50% weightage during evaluation.
 - **Bonus Sub_Task**: Train your GAN to generate some theme based images as a starting point you can train it on christmas theme but you are free to try out other themes also. This carries 10% weightage during evaluation.
 
