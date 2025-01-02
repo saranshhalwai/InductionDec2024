@@ -29,7 +29,7 @@ def extract_features(images):
     features = features.reshape(features.shape[0], 236, 236, 3)  # Reshape all images in one go
     return features
 
-TRAIN_DIR = "/kaggle/input/dataset/Train"
+TRAIN_DIR = "Task-1/Data/Train"
 
 train = pd.DataFrame()
 train['image'], train['label'] = createdataframe(TRAIN_DIR)
@@ -47,21 +47,23 @@ model = Sequential()
 # Convolutional layers
 model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(236, 236, 3)))
 model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(BatchNormalization())
 
-model.add(Conv2D(256, kernel_size=(3, 3), activation='relu'))
+model.add(Conv2D(64, kernel_size=(3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(BatchNormalization())
 
-model.add(Conv2D(512, kernel_size=(3, 3), activation='relu'))
+model.add(Conv2D(128, kernel_size=(3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
-
-model.add(Conv2D(1024, kernel_size=(3, 3), activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(BatchNormalization())
 
 model.add(Flatten())
-model.add(Dense(1024, activation='relu'))
+model.add(Dense(128, activation='relu'))
 model.add(Dropout(0.3))
-model.add(Dense(2048, activation='relu'))
+model.add(Dense(64, activation='relu'))
 model.add(Dense(2, activation='softmax'))
 
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit(x=x_train, y=y_train, batch_size=25, epochs=20)
+
+model.save("Task-1/model.keras")
