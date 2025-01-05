@@ -1,5 +1,5 @@
 from keras.utils import to_categorical
-from keras_preprocessing.image import load_img
+from keras_preprocessing.image import load_img, ImageDataGenerator
 from keras.models import Sequential
 from keras.applications import MobileNetV2, ResNet152, VGG16, EfficientNetB0, InceptionV3
 from keras.layers import Dense, Conv2D, Dropout, Flatten, MaxPooling2D, BatchNormalization, GlobalAveragePooling2D
@@ -34,6 +34,17 @@ TRAIN_DIR = "Task-1/Data/Train"
 train = pd.DataFrame()
 train['image'], train['label'] = createdataframe(TRAIN_DIR)
 
+datagen = ImageDataGenerator( #to prepare dataset augmentation
+    rescale=1./255,                  
+    rotation_range=20,               
+    width_shift_range=0.2,           
+    height_shift_range=0.2,          
+    shear_range=0.2,                 
+    zoom_range=0.2,                  
+    horizontal_flip=True,            
+    fill_mode='nearest'              
+)
+
 train_features = extract_features(train['image'])
 
 x_train = train_features / 255.0
@@ -42,6 +53,31 @@ le = LabelEncoder()
 le.fit(train['label'])
 y_train = le.transform(train['label'])
 y_train = to_categorical(y_train, num_classes=2)
+
+# Convert x_train and y_train to lists for augmentation
+x_train = list(x_train)
+y_train = list(y_train)
+
+# Augment the dataset
+augmented_images = []
+augmented_labels = []
+
+for img, label in zip(x_train, y_train):
+    img = img.reshape((1,) + img.shape)  # Add batch dimension for datagen.flow
+    i = 0
+    for aug_img in datagen.flow(img, batch_size=1):
+        augmented_images.append(aug_img[0])  # Remove batch dimension
+        augmented_labels.append(label)      # Add the corresponding label
+        i += 1
+        if i >= 3:  # Generate 5 augmented images per input image
+            break
+
+# Combine original and augmented data
+x_train_augmented = np.array(x_train + augmented_images)
+y_train_augmented = np.array(y_train + augmented_labels)
+
+print("Original dataset size:", len(x_train))
+print("Augmented dataset size:", len(x_train_augmented))
 
 model = Sequential()
 # Convolutional layers
@@ -64,6 +100,6 @@ model.add(Dense(64, activation='relu'))
 model.add(Dense(2, activation='softmax'))
 
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-model.fit(x=x_train, y=y_train, batch_size=25, epochs=20)
+model.fit(x=x_train_augmented, y=y_train_augmented, batch_size=25, epochs=20, validation_split=0.1)
 
 model.save("Task-1/model.keras")
