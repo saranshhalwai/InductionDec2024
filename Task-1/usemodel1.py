@@ -11,13 +11,11 @@ def prepareImages(dir):
     for imagename in os.listdir(os.path.join(dir)):
         image_paths.append(os.path.join(dir, imagename))
         image_names.append(imagename)
-        print(imagename," prepped")
     return image_paths, image_names
 
 def extract_features(images):
     features = []
     for image in tqdm(images):
-        print("on img ", image)
         try:
             img = load_img(image, target_size=(236, 236))
             img = np.array(img)
@@ -38,9 +36,10 @@ x_test = test_features/255.0
 
 new_model = tf.keras.models.load_model('Task-1/model.keras')
 test["result"] = new_model.predict(x=x_test).argmax(axis=1)
-test["Label"] = test["result"].map({0: "Real", 1: "AI"})
+test["Label"] = test["result"].map({1: "Real", 0: "AI"})
 
 result = pd.DataFrame()
 result["Id"], result["Label"] = test["Id"] , test["Label"]
-result.to_csv("Task-1/output/result1.csv")
+result["Id"]= result["Id"].str.replace(".jpg", "", regex=False)
+result.to_csv("Task-1/output/result1.csv", index= False)
 
